@@ -20,8 +20,8 @@ import org.json.JSONObject;
 public class DeleteData extends AppCompatActivity{
 
     private Button delete;
-    String id;
-    String name;
+    private String id;
+    private String name;
     private EditText uid1ET;
 
 

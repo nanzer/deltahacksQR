@@ -1,5 +1,6 @@
 package deltahacks.sheetaccess;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,18 +25,12 @@ import org.json.JSONObject;
 public class ReadSingleData extends AppCompatActivity {
 
     private Button read;
-    String id;
-    String name;
-    String school;
-    String email;
-    String diet;
-    String slack;
-    String photo;
-    String EOHSS;
+    private Map<String,String> map = new HashMap <String, String>();
+    private String [] headings = {"ID", "Full Name", "School", "Email", "Diet", "Slack?", "Photo Consent?", "EHOSS Waiver"};
 
     private EditText uid1ET;
-    private TextView id_l, name_l, school_l, email_l, diet_l, slack_l, photo_l, EOHSS_l;
-    private TextView id_v, name_v, school_v, email_v, diet_v, slack_v, photo_v, EOHSS_v;
+    private TextView [] labels = new TextView[8];
+    private TextView [] attendeeInfo = new TextView[8];
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,30 +39,29 @@ public class ReadSingleData extends AppCompatActivity {
         read = (Button) findViewById(R.id.insert_btn);
         uid1ET = (EditText) findViewById(R.id.uid);
 
-        id_l = (TextView) findViewById(R.id.id_l);
-        name_l = (TextView) findViewById(R.id.name_l);
-        school_l = (TextView) findViewById(R.id.school_l);
-        email_l = (TextView) findViewById(R.id.email_l);
-        diet_l = (TextView) findViewById(R.id.diet_l);
-        slack_l = (TextView) findViewById(R.id.slack_l);
-        photo_l = (TextView) findViewById(R.id.photo_l);
-        EOHSS_l= (TextView) findViewById(R.id.EOHSS_l);
+        labels[0] = (TextView) findViewById(R.id.id_l);
+        labels[1] = (TextView) findViewById(R.id.name_l);
+        labels[2] = (TextView) findViewById(R.id.school_l);
+        labels[3] = (TextView) findViewById(R.id.email_l);
+        labels[4] = (TextView) findViewById(R.id.diet_l);
+        labels[5] = (TextView) findViewById(R.id.slack_l);
+        labels[6] = (TextView) findViewById(R.id.photo_l);
+        labels[7] = (TextView) findViewById(R.id.EOHSS_l);
 
-        id_v = (TextView) findViewById(R.id.id_v);
-        name_v = (TextView) findViewById(R.id.name_v);
-        school_v = (TextView) findViewById(R.id.school_v);
-        email_v = (TextView) findViewById(R.id.email_v);
-        diet_v = (TextView) findViewById(R.id.diet_v);
-        slack_v = (TextView) findViewById(R.id.slack_v);
-        photo_v = (TextView) findViewById(R.id.photo_v);
-        EOHSS_v = (TextView) findViewById(R.id.EOHSS_v);
+        attendeeInfo[0] = (TextView) findViewById(R.id.id_v);
+        attendeeInfo[1] = (TextView) findViewById(R.id.name_v);
+        attendeeInfo[2] = (TextView) findViewById(R.id.school_v);
+        attendeeInfo[3] = (TextView) findViewById(R.id.email_v);
+        attendeeInfo[4] = (TextView) findViewById(R.id.diet_v);
+        attendeeInfo[5] = (TextView) findViewById(R.id.slack_v);
+        attendeeInfo[6] = (TextView) findViewById(R.id.photo_v);
+        attendeeInfo[7] = (TextView) findViewById(R.id.EOHSS_v);
 
 
         read.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                id = uid1ET.getText().toString();
+                map.put("ID", uid1ET.getText().toString().trim());
 
                 new ReadDataActivity().execute();
             }
@@ -93,8 +90,8 @@ public class ReadSingleData extends AppCompatActivity {
         @Nullable
         @Override
         protected Void doInBackground(Void...params) {
-            Log.i(Controller.TAG, "IDVALUE" + id);
-            JSONObject jsonObject = Controller.readData(id);
+            Log.i(Controller.TAG, "IDVALUE" + map.get("ID"));
+            JSONObject jsonObject = Controller.readData(map.get("ID"));
             Log.i(Controller.TAG, "Json obj " + jsonObject);
 
             try {
@@ -104,13 +101,13 @@ public class ReadSingleData extends AppCompatActivity {
                 if (jsonObject != null) {
 
                     JSONObject user = jsonObject.getJSONObject("user");
-                    name = user.getString("name");
-                    school = user.getString("school");
-                    email = user.getString("email");
-                    diet = user.getString("diet");
-                    slack = user.getString("slack");
-                    photo = user.getString("photo");
-                    EOHSS = user.getString("EOHSS");
+                    map.put(headings[1], user.getString("name"));
+                    map.put(headings[2], user.getString("school"));
+                    map.put(headings[3], user.getString("email"));
+                    map.put(headings[4], user.getString("diet"));
+                    map.put(headings[5], user.getString("slack"));
+                    map.put(headings[6], user.getString("photo"));
+                    map.put(headings[7],user.getString("EOHSS"));
 
                 }
             } catch (JSONException je) {
@@ -123,24 +120,16 @@ public class ReadSingleData extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             dialog.dismiss();
-            if (name != null) {
-                id_l.setText("ID");
-                name_l.setText("Full Name");
-                school_l.setText("School");
-                email_l.setText("Email");
-                diet_l.setText("Diet");
-                slack_l.setText("Slack?");
-                photo_l.setText("Photo Consent?");
-                EOHSS_l.setText("EOHSS Waiver");
+            if (map.get(headings[1]) != null) {
 
-                id_v.setText(id);
-                name_v.setText(name);
-                school_v.setText(school);
-                email_v.setText(email);
-                diet_v.setText(diet);
-                slack_v.setText(slack);
-                photo_v.setText(photo);
-                EOHSS_v.setText(EOHSS);
+
+                for (int i = 0 ; i<labels.length; i++) {
+                    labels[i].setText(headings[i]);
+                }
+
+                for (int i = 0; i<attendeeInfo.length; i++) {
+                    attendeeInfo[i].setText(map.get(headings[i]));
+                }
 
             } else
                 Toast.makeText(getApplicationContext(), "ID not found", Toast.LENGTH_LONG).show();

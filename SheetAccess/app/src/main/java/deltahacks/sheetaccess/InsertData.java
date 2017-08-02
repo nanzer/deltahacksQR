@@ -20,8 +20,8 @@ import org.json.JSONObject;
 public class InsertData extends AppCompatActivity {
 
     private Button insert;
-    String id;
-    String name;
+    private String id;
+    private String name;
     private EditText uid1ET, uid2, nameET;
 
 

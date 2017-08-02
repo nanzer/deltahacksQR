@@ -12,8 +12,8 @@ import java.util.List;
 
 public class MyArrayAdapter extends ArrayAdapter < MyDataModel > {
 
-    List < MyDataModel > modelList;
-    Context context;
+    private List < MyDataModel > modelList;
+    private Context context;
     private LayoutInflater mInflater;
 
     // Constructors

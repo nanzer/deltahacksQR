@@ -122,6 +122,7 @@ public class ReadAllData extends AppCompatActivity {
 
                                 String id = innerObject.getString("ID");
                                 String name = innerObject.getString("NAME");
+                                String school = innerObject.getString("SCHOOL");
                                 //  String image = innerObject.getString(Keys.KEY_IMAGE);
                                 /**
                                  * Getting Object from Object "phone"
@@ -130,7 +131,7 @@ public class ReadAllData extends AppCompatActivity {
                                 //String phone = phoneObject.getString(Keys.KEY_MOBILE);
 
                                 model.setName(name);
-                                model.setCountry(id);
+                                model.setId(id);
                                 //                              model.setImage(image);
 
                                 /**
@@ -157,6 +158,7 @@ public class ReadAllData extends AppCompatActivity {
              * Checking if List size if more than zero then
              * Update ListView
              */
+            Log.d("ReadAllData", list.size()+"");
             if (list.size() > 0) {
                 adapter.notifyDataSetChanged();
             } else {
